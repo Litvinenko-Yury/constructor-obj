@@ -4,11 +4,11 @@
 
 function Person(name, age, gender) {
   //это функция-конструктор. Она конструирует объекты. H-р, новых персон
-  this.name = name,
-    this.age = age,
-    this._gender = gender,
-    Object.defineProperty(this, "_gender", { writable: false }), // изменить дескриптор
-    this.children = [],
+  this.name = name;
+    this.age = age;
+    this._gender = gender;
+    Object.defineProperty(this, "_gender", { writable: false }); // изменить дескриптор
+    this.children = [];
 
     this.printInfo = function () {
       console.log(`*******************`);
@@ -17,18 +17,18 @@ function Person(name, age, gender) {
       console.log(`age = ${this.age}`);
       console.log(`gender = ${this._gender}`);
       console.log(`*******************`);
-    },
+    };
 
     this.printChildren = function () {
       console.log(`*******************`);
       console.log(`Дети ${this.name}:`);
       console.log(this.children);
       console.log(`*******************`);
-    },
+    };
 
     this.incrementAge = function () {
       this.age = this.age + 1;
-    },
+    };
 
     this.addChildren = function (n) {
       for (let i = 0; i < n; i++) {

@@ -1,8 +1,8 @@
 'use strict';
 
 function User(name, age) {
-  this.name = name,
-    this._age = age
+  this.name = name;
+    this._age = age;
 }
 
 /**создаем новых людей*/
