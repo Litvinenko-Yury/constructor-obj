@@ -1,38 +1,44 @@
+/**скрипт-макет для опробования разных приёмов*/
+
 'use strict';
 
 function User(name, age) {
   this.name = name;
-  this._age = age;
+  this.age = age;
 }
 
 /**создаем новых людей*/
-let user = new User('Ivan', '25');
+let user = new User('Ivan', 25);
+console.log(user);
 
+/************************** */
+/****для user добавил Proxy***/
+//***
+//target - это сам объект
+//property - имя свойства, которое нужно прочесть;
+//value - значение свойства
 user = new Proxy(user, {
-  set(target, prop, val) { // перехватываем запись свойства
-    if (prop.startsWith('_')) {
+  set(target, property, value) { // перехватываем запись свойства
+    console.log(typeof (property)); // имя свойства, которое читаем
+    console.log(typeof (target[property])); // сейчас там 25
+    console.log(typeof (value)); // записываем
+    if (property.startsWith('age') && (target[property] > value)) {
       throw new Error("Отказано в доступе на запись");
     } else {
-      target[prop] = val;
+      target[property] = value; // записать новое значение а свойство
       return true;
     }
   },
-  deleteProperty(target, prop) { // перехватываем удаление свойства
-    if (prop.startsWith('_')) {
+  deleteProperty(target, property) { // перехватываем удаление свойства
+    if (property.startsWith('_')) {
       throw new Error("Отказано в доступе на удаление");
     } else {
-      delete target[prop];
+      delete target[property];
       return true;
     }
   }
 });
 
-
-/**смотрим, что люди создались */
+/**меняем _age*/
+user.age = 20;
 console.log(user);
-
-/*тест изменения user.age*/
-user.age = 50;
-console.log(`*******************`);
-console.log(`ivan.age = ${user.age}`); // оно изменилось...
-console.log(`оно изменилось...`);

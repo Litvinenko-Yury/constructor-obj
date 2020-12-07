@@ -5,37 +5,37 @@
 function Person(name, age, gender) {
   //это функция-конструктор. Она конструирует объекты. H-р, новых персон
   this.name = name;
-    this.age = age;
-    this._gender = gender;
-    Object.defineProperty(this, "_gender", { writable: false }); // изменить дескриптор
-    this.children = [];
+  this.age = age;
+  this._gender = gender;
+  Object.defineProperty(this, "_gender", { writable: false }); // изменить дескриптор
+  this.children = [];
 
-    this.printInfo = function () {
-      console.log(`*******************`);
-      console.log(`данные по: ${this.name}`);
-      console.log(`name = ${this.name}`);
-      console.log(`age = ${this.age}`);
-      console.log(`gender = ${this._gender}`);
-      console.log(`*******************`);
-    };
+  this.printInfo = function () {
+    console.log(`*******************`);
+    console.log(`данные по: ${this.name}`);
+    console.log(`name = ${this.name}`);
+    console.log(`age = ${this.age}`);
+    console.log(`gender = ${this._gender}`);
+    console.log(`*******************`);
+  };
 
-    this.printChildren = function () {
-      console.log(`*******************`);
-      console.log(`Дети ${this.name}:`);
-      console.log(this.children);
-      console.log(`*******************`);
-    };
+  this.printChildren = function () {
+    console.log(`*******************`);
+    console.log(`Дети ${this.name}:`);
+    console.log(this.children);
+    console.log(`*******************`);
+  };
 
-    this.incrementAge = function () {
-      this.age = this.age + 1;
-    };
+  this.incrementAge = function () {
+    this.age = this.age + 1;
+  };
 
-    this.addChildren = function (n) {
-      for (let i = 0; i < n; i++) {
-        let nameChild = `реб${i + 1}`;
-        this.children.push(nameChild);
-      }
-    };
+  this.addChildren = function (n) {
+    for (let i = 0; i < n; i++) {
+      let nameChild = `реб${i + 1}`;
+      this.children.push(nameChild);
+    }
+  };
 }
 
 
@@ -72,33 +72,37 @@ console.log(descriptorIvan);
 
 /*********************************/
 /*тест изменения ivan.age*/
-ivan.age = 50;
-console.log(`*******************`);
-console.log(`ivan.age = ${ivan.age}`); // оно изменилось...
-console.log(`оно изменилось...`);
-
+/************************** */
+/****для ivan добавил Proxy***/
+//target - это сам объект
+//property - имя свойства, которое нужно прочесть;
+//value - значение свойства
 ivan = new Proxy(ivan, {
-  set(target, prop, val) { // перехватываем запись свойства
-    if (prop.startsWith('_')) {
+  set(target, property, value) { // перехватываем запись свойства
+    //console.log(typeof (property)); // имя свойства, которое читаем
+    //console.log(typeof (target[property])); // сейчас там 25
+    //console.log(typeof (value)); // записываем
+    if (property.startsWith('age') && (target[property] > value)) {
       throw new Error("Отказано в доступе на запись");
     } else {
-      target[prop] = val;
+      target[property] = value; // записать новое значение а свойство
       return true;
     }
   },
-  deleteProperty(target, prop) { // перехватываем удаление свойства
-    if (prop.startsWith('_')) {
+  deleteProperty(target, property) { // перехватываем удаление свойства
+    if (property.startsWith('_')) {
       throw new Error("Отказано в доступе на удаление");
     } else {
-      delete target[prop];
+      delete target[property];
       return true;
     }
   }
 });
 
-ivan.age = 75;
-console.log(`*******************`);
-console.log(`ivan.age = ${ivan.age}`); // оно ОПЯТЬ изменилось...
-console.log(`оно ОПЯТЬ изменилось...`);
-console.log(`*******************`);
-console.log(`ЭТО ФИАСКО, БРАТАН...`);
+ivan.age = 75; // значение  75 - можно записать
+console.log(`ivan.age = ${ivan.age}`);
+
+ivan.age = 20; // а вот 20 -нельзя записать, будет ошибка
+console.log(ivan.age);
+
+
