@@ -1,9 +1,7 @@
-/*Конструктор объектов*/
-
 'use strict';
 
 function Person(name, age, gender) {
-  //это функция-конструктор. Она конструирует объекты. H-р, новых персон
+  //это функция-конструктор. Она конструирует объекты. H-р, новых персон
   this.name = name;
   this.age = age;
   this._gender = gender;
@@ -36,8 +34,34 @@ function Person(name, age, gender) {
       this.children.push(nameChild);
     }
   };
-}
 
+
+  //target - это сам объект
+  //property - имя свойства, которое нужно прочесть;
+  //value - значение свойства
+  const proxy = new Proxy(this, {
+    set(target, property, value) { // перехватываем запись свойства
+      //console.log(typeof (property)); // имя свойства, которое читаем
+      //console.log(typeof (target[property])); // сейчас там 25
+      //console.log(typeof (value)); // записываем
+      if (property.startsWith('age') && (target[property] > value)) {
+        throw new Error("Отказано в доступе на запись");
+      } else {
+        target[property] = value; // записать новое значение а свойство
+        return true;
+      }
+    },
+    deleteProperty(target, property) { // перехватываем удаление свойства
+      if (property.startsWith('_')) {
+        throw new Error("Отказано в доступе на удаление");
+      } else {
+        delete target[property];
+        return true;
+      }
+    }
+  });
+  return proxy;
+}
 
 /*********************************/
 /**создаем новых людей*/
@@ -72,37 +96,8 @@ console.log(descriptorIvan);
 
 /*********************************/
 /*тест изменения ivan.age*/
-/************************** */
-/****для ivan добавил Proxy***/
-//target - это сам объект
-//property - имя свойства, которое нужно прочесть;
-//value - значение свойства
-ivan = new Proxy(ivan, {
-  set(target, property, value) { // перехватываем запись свойства
-    //console.log(typeof (property)); // имя свойства, которое читаем
-    //console.log(typeof (target[property])); // сейчас там 25
-    //console.log(typeof (value)); // записываем
-    if (property.startsWith('age') && (target[property] > value)) {
-      throw new Error("Отказано в доступе на запись");
-    } else {
-      target[property] = value; // записать новое значение а свойство
-      return true;
-    }
-  },
-  deleteProperty(target, property) { // перехватываем удаление свойства
-    if (property.startsWith('_')) {
-      throw new Error("Отказано в доступе на удаление");
-    } else {
-      delete target[property];
-      return true;
-    }
-  }
-});
 
-ivan.age = 75; // значение  75 - можно записать
+ivan.age = 75; // значение 75 - можно записать
 console.log(`ivan.age = ${ivan.age}`);
 
-ivan.age = 20; // а вот 20 -нельзя записать, будет ошибка
-console.log(ivan.age);
-
-
+ivan.age = 20; // значение 20 - нельзя записать, ошибка
