@@ -53,14 +53,14 @@ console.log(helen);
 
 /*********************************/
 /*тест методов на Иване*/
-ivan.printInfo(); // вывести name, age и gender персонажа
+ivan.printInfo(); // вывести в консоль name, age и gender персонажа
 ivan.addChildren(5); //добавить n детей в массив children у персонажа
-ivan.printChildren(); // вывести детей персонажа
+ivan.printChildren(); // вывести  в консоль детей персонажа
 
 /*********************************/
 /*тест метода .incrementAge() на Иване*/
 console.log(`Возраст Ивана, старое значение = ${ivan.age}`);
-ivan.incrementAge(); //добавить n детей в массив children
+ivan.incrementAge(); //добавить возраст Ивану
 console.log(`Возраст Ивана, новое значение = ${ivan.age}`);
 
 /*********************************/
