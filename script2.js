@@ -2,7 +2,7 @@
 
 function User(name, age) {
   this.name = name;
-    this._age = age;
+  this._age = age;
 }
 
 /**создаем новых людей*/
@@ -35,21 +35,4 @@ console.log(user);
 user.age = 50;
 console.log(`*******************`);
 console.log(`ivan.age = ${user.age}`); // оно изменилось...
-
-
-
-
-
-
-/****************** */
-/****************** */
-// "set" не позволяет записать _password
-try {
-  user._password = "test"; // Error: Отказано в доступе
-} catch (e) { console.log(e.message); }
-
-// "deleteProperty" не позволяет удалить _password
-try {
-  delete user._password; // Error: Отказано в доступе
-} catch (e) { console.log(e.message); }
-
+console.log(`оно изменилось...`);
